@@ -2,23 +2,24 @@ import "./ExpenseForm.css";
 import React, { useState } from "react";
 
 const ExpenseForm = (props) => {
-  //   const [enteredTitle, getTheTitle] = useState("");
-  //   const [enteredAmount, getTheAmount] = useState("");
-  //   const [enteredDate, getTheDate] = useState("");
+  //   const [title, getTheTitle] = useState("");
+  //   const [amount, getTheAmount] = useState("");
+  //   const [date, getTheDate] = useState("");
+  const [newExpense, setTheNewExpense] = useState(false);
   const [userInputs, setUserInputs] = useState({
-    enteredTitle: "",
-    enteredAmount: "",
-    enteredDate: "",
+    title: "",
+    amount: "",
+    date: "",
   });
   const titleChange = (event) => {
     // setUserInputs({
     //   ...userInputs,
-    //   enteredTitle: event.target.value,
+    //   title: event.target.value,
     // });
     setUserInputs((prevState) => {
       return {
         ...prevState,
-        enteredTitle: event.target.value,
+        title: event.target.value,
       };
     });
   };
@@ -26,7 +27,7 @@ const ExpenseForm = (props) => {
     setUserInputs((prevState) => {
       return {
         ...prevState,
-        enteredAmount: event.target.value,
+        amount: event.target.value,
       };
     });
   };
@@ -34,51 +35,82 @@ const ExpenseForm = (props) => {
     setUserInputs((prevState) => {
       return {
         ...prevState,
-        enteredDate:Date( event.target.value),
+        date: new Date(event.target.value),
       };
     });
   };
   const buttonChanger = (event) => {
-      event.preventDefault();
+    event.preventDefault();
 
     console.log(userInputs);
     props.onSaveExpenseData(userInputs);
     setUserInputs((prevState) => {
-        return {
-          enteredTitle:'',
-          enteredAmount:'',
-          enteredDate: '',
-        };
-      });
+      return {
+        title: "",
+        amount: "",
+        date: "",
+      };
+    });
+  };
+  const onSubmit = () => {
+    setTheNewExpense(true);
+  };
+  const onSubmitFalse = () => {
+    setTheNewExpense(false);
   };
   return (
-    <form onSubmit={buttonChanger} >
-      <div className="new-expense__controls">
-        <div className="new-expense__control">
-          <label> Title</label>
-          <input type="text" value={userInputs.enteredTitle} onChange={titleChange} />
+    <div>
+      {newExpense == false ? (
+        <div className="new-expense__actions">
+          <button
+            onClick={onSubmit}
+            className="AddNewExpense"
+            type="button"
+          >
+            Add New Expense
+          </button>
         </div>
-        <div className="new-expense__control">
-          <label> Amount</label>
-          <input type="number" min="0.01"  value={userInputs.enteredAmount}  step="0.01" onChange={amountChange} />
-        </div>
-        <div className="new-expense__control">
-          <label> Date</label>
-          <input
-            type="date"
-            value={userInputs.enteredDate}
-            min="2019-01-01"
-            max="2022-12-3"
-            onChange={dateChange}
-          />
-        </div>
-      </div>
-      <div className="new-expense__actions">
-        <button type="submit">
-          Add Expense
-        </button>
-      </div>
-    </form>
+      ) : (
+        <form onSubmit={buttonChanger}>
+          <div className="new-expense__controls">
+            <div className="new-expense__control">
+              <label> Title</label>
+              <input
+                type="text"
+                value={userInputs.title}
+                onChange={titleChange}
+              />
+            </div>
+            <div className="new-expense__control">
+              <label> Amount</label>
+              <input
+                type="number"
+                min="0.01"
+                value={userInputs.amount}
+                step="0.01"
+                onChange={amountChange}
+              />
+            </div>
+            <div className="new-expense__control">
+              <label> Date</label>
+              <input
+                type="date"
+                value={userInputs.date}
+                min="2019-01-01"
+                max="2022-12-3"
+                onChange={dateChange}
+              />
+            </div>
+          </div>
+          <div className="new-expense__actions">
+            <button  onClick={onSubmitFalse} type="button">
+              Cancel
+            </button>
+            <button type="submit">Add Expense</button>
+          </div>
+        </form>
+      )}
+    </div>
   );
 };
 

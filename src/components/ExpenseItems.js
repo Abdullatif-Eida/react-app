@@ -4,36 +4,36 @@ import Card from "./Card";
 import ExpensesFilter from "./newExpenseUI/ExpenseFilter";
 import { useState } from "react";
 function ExpenseItems(props) {
-  const [date, setTheDate] = useState("2022");
-  const getSelectedDate = (selectedDate)=>{
+  const [date, setTheDate] = useState("Select a year");
+  const [expensesItem, setExpensesItems] = useState(props.expensesItems);
+  const getSelectedDate = (selectedDate) => {
     setTheDate(selectedDate);
-    console.log(date);
-  }
+    if (selectedDate != "") {
+      setExpensesItems(
+        props.expensesItems.filter(
+          (expense) => expense.date.getFullYear() == selectedDate
+        )
+      );
+    }else{
+      setExpensesItems(props.expensesItems);
+    }
+  };
 
   return (
-      <Card className="expenses">
-      <ExpensesFilter currentDate={date} onChangeSelectedDate={getSelectedDate}></ExpensesFilter>
+    <Card className="expenses">
+      <ExpensesFilter
+        currentDate={date}
+        onChangeSelectedDate={getSelectedDate}
+      ></ExpensesFilter>
+      {expensesItem.length==0?(<p>No expenses found</p>):(expensesItem.map((expense, index) => (
         <ExpenseItem
-          title={props.expensesItems[0].title}
-          amount={props.expensesItems[0].amount}
-          date={props.expensesItems[0].date}
+          key={expense.id}
+          title={expense.title}
+          amount={expense.amount}
+          date={expense.date}
         ></ExpenseItem>
-        <ExpenseItem
-          title={props.expensesItems[1].title}
-          amount={props.expensesItems[1].amount}
-          date={props.expensesItems[1].date}
-        ></ExpenseItem>
-        <ExpenseItem
-          title={props.expensesItems[2].title}
-          amount={props.expensesItems[2].amount}
-          date={props.expensesItems[2].date}
-        ></ExpenseItem>
-        <ExpenseItem
-          title={props.expensesItems[3].title}
-          amount={props.expensesItems[3].amount}
-          date={props.expensesItems[3].date}
-        ></ExpenseItem>
-      </Card>
+      )))}
+    </Card>
   );
 }
 
